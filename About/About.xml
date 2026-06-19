@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <name>Tile Biome Editor</name>
-  <author>jamalone</author>
+  <author>James Malone</author>
   <packageId>jamalone.tilebiomeeditor</packageId>
+  <url>https://github.com/james-malone/boringbiome</url>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <description>Adds a "Change biome..." button to any selected world tile. Pick a tile on the planet (during landing-site selection or on the in-game world map), choose a biome, and the tile is repainted to match.
+  <description>Select any tile on the world map and change its biome.
 
-Change a tile BEFORE its map is generated: the new biome drives map generation only for maps created afterward. It does not rewrite a map that already exists.
+When you pick a landing site you're stuck with whatever biome the planet generated there. Tile Biome Editor adds a "Change biome..." button to the selected tile so you can set it to anything you like — turn a scorching desert into a temperate forest, a bog into tundra, whatever the colony you have in mind needs.
 
-Landforms (peninsulas, islands, etc.) and tile names are independent of the biome, so a desert peninsula re-biomed to forest stays a peninsula.
+[HOW TO USE]
+- Select a tile on the world map. The button appears both on the "select landing site" screen and the in-game world map.
+- Click "Change biome..." and choose a biome from the list. The tile is repainted to match.
 
-Requires Harmony.</description>
+[WHAT IT CHANGES]
+Only the tile's biome. Landforms (peninsulas, islands, coasts), rivers, roads, and tile names are left intact — so you can re-biome a desert peninsula into a forest and it stays a peninsula.
+
+[IMPORTANT — TIMING]
+The biome drives map generation, so change a tile BEFORE its map is generated. Editing a tile only affects maps generated afterward; it does not rewrite a map that already exists.
+
+[COMPATIBILITY]
+- RimWorld 1.6 (Odyssey).
+- Requires Harmony (load it above this mod).
+- Safe to add to an existing save, and safe to remove: it only adds a UI button and stores no data of its own.
+
+Source and issues: https://github.com/james-malone/boringbiome</description>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>
