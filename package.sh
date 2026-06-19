@@ -1,28 +1,32 @@
 #!/usr/bin/env bash
 #
-# Build the mod and assemble a CLEAN copy under release/TileBiomeEditor that
-# contains only what a Steam Workshop subscriber needs — no .git, obj/, or
-# Source/. The Mods folder is symlinked to this release dir, so running this
-# script is the one command for both testing in-game and publishing.
+# Build the mod, assemble a CLEAN copy (no .git/obj/Source), and deploy it as
+# REAL files into the RimWorld Mods folder.
+#
+# Why real files instead of a symlink: RimWorld loads a symlinked mod fine, but
+# its Steam Workshop uploader only shows the "Upload to Steam Workshop" button
+# for a genuine local folder. So we copy, not link.
 #
 # Usage:  ./package.sh
+# Override the Mods folder if needed:  RIMWORLD_MODS=/path/to/Mods ./package.sh
 #
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 OUT="$ROOT/release/TileBiomeEditor"
+MODS_DIR="${RIMWORLD_MODS:-$HOME/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods}"
+DEST="$MODS_DIR/TileBiomeEditor"
 
 echo "==> Building (Release)"
 dotnet build "$ROOT/Source/TileBiomeEditor.csproj" -c Release
 
-# PublishedFileId.txt links the folder to its Workshop item. Preserve it across
-# rebuilds — first from a prior release, otherwise from the source About/ folder.
+# PublishedFileId.txt links the folder to its Workshop item. Find an existing
+# one in priority order: committed repo copy, then the deployed copy that Steam
+# writes on first upload, then a prior release.
 PFID=""
-if [ -f "$OUT/About/PublishedFileId.txt" ]; then
-  PFID="$(cat "$OUT/About/PublishedFileId.txt")"
-elif [ -f "$ROOT/About/PublishedFileId.txt" ]; then
-  PFID="$(cat "$ROOT/About/PublishedFileId.txt")"
-fi
+for f in "$ROOT/About/PublishedFileId.txt" "$DEST/About/PublishedFileId.txt" "$OUT/About/PublishedFileId.txt"; do
+  if [ -f "$f" ]; then PFID="$(tr -d '[:space:]' < "$f")"; break; fi
+done
 
 echo "==> Assembling clean mod -> $OUT"
 rm -rf "$OUT"
@@ -30,20 +34,25 @@ mkdir -p "$OUT/Assemblies"
 cp -R "$ROOT/About"    "$OUT/About"
 cp -R "$ROOT/Textures" "$OUT/Textures"
 cp    "$ROOT/Assemblies/"*.dll "$OUT/Assemblies/"
-
-# Copy any other standard mod folders if they exist later.
 for d in Languages Defs Patches Sounds; do
   [ -d "$ROOT/$d" ] && cp -R "$ROOT/$d" "$OUT/$d"
 done
-
-# Drop the .gitkeep placeholder that lives in the source Assemblies/ folder.
 rm -f "$OUT/Assemblies/.gitkeep"
 
-# Restore the Workshop link if we had one.
+# Persist the Workshop link into both the release and the (committable) repo
+# About/ folder so future uploads keep targeting the same item.
 if [ -n "$PFID" ]; then
   printf '%s' "$PFID" > "$OUT/About/PublishedFileId.txt"
-  echo "==> Preserved PublishedFileId.txt ($PFID)"
+  printf '%s' "$PFID" > "$ROOT/About/PublishedFileId.txt"
+  echo "==> Workshop link: $PFID"
 fi
 
-echo "==> Done. Contents:"
-find "$OUT" -type f | sed "s|$ROOT/||"
+if [ -d "$MODS_DIR" ]; then
+  echo "==> Deploying real files -> $DEST"
+  rm -rf "$DEST"            # also removes any old symlink
+  cp -R "$OUT" "$DEST"
+else
+  echo "==> Mods folder not found ($MODS_DIR) — skipped deploy"
+fi
+
+echo "==> Done."
