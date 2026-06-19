@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Tile Biome Editor</name>
+  <author>jamalone</author>
+  <packageId>jamalone.tilebiomeeditor</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Adds a "Change biome..." button to any selected world tile. Pick a tile on the planet (during landing-site selection or on the in-game world map), choose a biome, and the tile is repainted to match.
+
+Change a tile BEFORE its map is generated: the new biome drives map generation only for maps created afterward. It does not rewrite a map that already exists.
+
+Landforms (peninsulas, islands, etc.) and tile names are independent of the biome, so a desert peninsula re-biomed to forest stays a peninsula.
+
+Requires Harmony.</description>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+</ModMetaData>

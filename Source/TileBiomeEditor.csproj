@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- RimWorld runs on the Unity Mono runtime; mods build against .NET Framework 4.7.2. -->
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+
+    <AssemblyName>TileBiomeEditor</AssemblyName>
+    <RootNamespace>TileBiomeEditor</RootNamespace>
+
+    <!-- Drop the built DLL straight into the mod's Assemblies/ folder. -->
+    <OutputPath>../Assemblies/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <BaseIntermediateOutputPath>obj/</BaseIntermediateOutputPath>
+
+    <!-- A RimWorld mod DLL is loaded by the game; it needs no symbols or deps file. -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Lets net472 build cross-platform (macOS/Linux) without Mono installed. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+
+    <!-- RimWorld 1.6 reference assemblies (Assembly-CSharp + Unity). Reference only, never copied. -->
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*" PrivateAssets="all" />
+
+    <!-- Harmony: reference it to compile, but do NOT bundle 0Harmony.dll — it ships as its own mod. -->
+    <PackageReference Include="Lib.Harmony" Version="2.3.*" PrivateAssets="all" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+</Project>
