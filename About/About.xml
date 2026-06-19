@@ -7,16 +7,19 @@
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <description>Select any tile on the world map and change its biome.
+  <description>Select any tile on the world map and change its biome and features.
 
-When you pick a landing site you're stuck with whatever biome the planet generated there. Tile Biome Editor adds a "Change biome..." button to the selected tile so you can set it to anything you like — turn a scorching desert into a temperate forest, a bog into tundra, whatever the colony you have in mind needs.
+When you pick a landing site you're stuck with whatever biome the planet generated there. Tile Biome Editor adds buttons to the selected tile so you can set it to anything you like — turn a scorching desert into a temperate forest, a bog into tundra, or make a spot windy, foggy, fertile or mineral-rich.
 
 [HOW TO USE]
-- Select a tile on the world map. The button appears both on the "select landing site" screen and the in-game world map.
-- Click "Change biome..." and choose a biome from the list. The tile is repainted to match.
+- Select a tile on the world map. The buttons appear both on the "select landing site" screen and the in-game world map.
+- "Change biome..." — choose a biome from the list; the tile is repainted to match.
+- "Change features..." — toggle tile features (mutators) such as windy, foggy, sunny, wet climate, fertile, mineral-rich, more/less wildlife, and so on. Active features are marked "(active)"; click one to toggle it.
 
 [WHAT IT CHANGES]
-Only the tile's biome. Landforms (peninsulas, islands, coasts), rivers, roads, and tile names are left intact — so you can re-biome a desert peninsula into a forest and it stays a peninsula.
+The tile's biome and a curated, safe set of feature mutators (weather, wildlife and resource/ground modifiers). Landforms (peninsulas, islands, coasts), rivers, roads, and tile names are left intact — so you can re-biome a desert peninsula into a windy forest and it stays a peninsula. Structural/landmark mutators (caves, lakes, ancient ruins) are intentionally not offered, since they are built for map generation.
+
+Tile features require the Odyssey DLC; without it the "Change features..." menu is simply empty and the biome editor works on its own.
 
 [IMPORTANT — TIMING]
 The biome drives map generation, so change a tile BEFORE its map is generated. Editing a tile only affects maps generated afterward; it does not rewrite a map that already exists.

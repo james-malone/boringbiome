@@ -1,8 +1,9 @@
 # Tile Biome Editor
 
-A RimWorld **1.6 / Odyssey** mod that adds a **Change biome...** button to any selected
-world tile. Pick a tile (on the landing-site screen or the in-game world map), choose a
-biome, and the tile is repainted to match.
+A RimWorld **1.6 / Odyssey** mod that adds **Change biome...** and **Change features...**
+buttons to any selected world tile. Pick a tile (on the landing-site screen or the in-game
+world map), change its biome, and toggle features like windy, foggy, fertile or
+mineral-rich.
 
 Your driving example works: a sandy-desert peninsula re-biomed to forest stays a peninsula
 — landforms and tile names are independent of the biome — so landing there generates a
@@ -10,10 +11,18 @@ forest map on a peninsula.
 
 ## How it works
 
-A single Harmony postfix on `Tile.GetGizmos()` appends one `Command_Action`. Because
-`WorldGizmoUtility` draws the selected tile's gizmos, the button appears exactly when a
-tile is selected. Clicking it lists every `BiomeDef`; picking one sets `tile.PrimaryBiome`
-and marks the terrain draw layer dirty so the globe recolors.
+A single Harmony postfix on `Tile.GetGizmos()` appends two `Command_Action`s. Because
+`WorldGizmoUtility` draws the selected tile's gizmos, the buttons appear exactly when a
+tile is selected.
+
+- **Change biome...** lists every `BiomeDef`; picking one sets `tile.PrimaryBiome`.
+- **Change features...** lists a curated, safe subset of `TileMutatorDef`s (weather,
+  wildlife and resource/ground modifiers — Odyssey's `TileMutators_Modifiers.xml`). Each is
+  toggled with `tile.AddMutator(def)` / `tile.RemoveMutator(def)`; `AddMutator` resolves
+  same-category conflicts on its own. Structural/landmark mutators (caves, lakes, ancient
+  ruins) are intentionally excluded — they're built for map generation.
+
+Either way the terrain draw layer is marked dirty so the globe redraws.
 
 See [Source/Patch_TileGizmos.cs](Source/Patch_TileGizmos.cs).
 
@@ -21,6 +30,9 @@ See [Source/Patch_TileGizmos.cs](Source/Patch_TileGizmos.cs).
 
 - Selected tile: `Find.WorldSelector.SelectedTile` — a `PlanetTile` struct, **not** an `int`.
 - The biome field is private; set via `tile.PrimaryBiome`.
+- Tile mutators live on the base `Tile`: read `tile.Mutators` (`IList<TileMutatorDef>`),
+  edit with `tile.AddMutator` / `tile.RemoveMutator`. They're saved with the world
+  (`Scribe_Collections … "mutatorDefs"`).
 - Redraw: `Find.World.renderer.SetDirty<WorldDrawLayer_Terrain>(tile.Layer)` (layers were
   renamed `WorldDrawLayer_*` and take a `PlanetLayer`).
 
